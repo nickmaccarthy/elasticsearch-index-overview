@@ -9,7 +9,7 @@ Now install the requirements
 Now open the file ```es_index_stats.py``` and fill in the ```_CLUSTER_ADDRESS``` portion with the address of your ES cluster
 
 # Output
-```python
+```bash
 (env)user@host$ python es_index_stats.py
 
 
