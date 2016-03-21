@@ -6,7 +6,8 @@ from collections import Counter
 from terminaltables import AsciiTable, DoubleTable
 from fabric.colors import red, green, yellow
 
-_CLUSTER_ADDRESS = '<******* FILL THIS IN *******>'
+#_CLUSTER_ADDRESS = 'https://search-pl-logs-s6nxq6nxibiwvtaiqzsxqkuqvq.us-east-1.es.amazonaws.com'
+_CLUSTER_ADDRESS = 'https://esh.placester.net'
 
 def bytesto(bytes, to, bsize=1024):
     """convert bytes to megabytes, etc.
@@ -45,6 +46,9 @@ def main():
     total_available = clstatsd['nodes']['fs']['available_in_bytes']
     total_free = clstatsd['nodes']['fs']['available_in_bytes']
 
+    jvm_max_mem = clstatsd['nodes']['jvm']['mem']['heap_max_in_bytes']
+    jvm_used_mem = clstatsd['nodes']['jvm']['mem']['heap_used_in_bytes']
+    jvm_free_mem = jvm_max_mem - jvm_used_mem
 
     indexes_formatted = [ re.sub('(\d{1,4}.\d{1,2}.\d{1,2})', '', x) for x in statsd['indices'] ]
     indexes = [ x for x in statsd['indices'] ]
@@ -70,6 +74,13 @@ def main():
     cstats.append(['Storage Size (GB)', 'Storage Used (GB)', 'Storage Available (GB)'])
     cstats.append(['%.2f' % (bytesto(total_size, 'g')), '%.2f' % (bytesto(total_used, 'g')), '%.2f' % (bytesto(total_available, 'g'))])
     table = AsciiTable(cstats, 'Cluster Sizing')
+    print table.table
+    print '\n'
+
+    cusage = []
+    cusage.append(['JVM Total Mem (GB)', 'JVM Used/Free Mem (GB)'])
+    cusage.append(['%.2f' % (bytesto(jvm_max_mem, 'g')), '%.2f/%.2f' % (bytesto(jvm_used_mem, 'g'), bytesto(jvm_free_mem, 'g'))])
+    table = AsciiTable(cusage, 'Cluster JVM Usage')
     print table.table
     print '\n'
 
