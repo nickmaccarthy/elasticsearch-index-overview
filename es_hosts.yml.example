@@ -1,0 +1,8 @@
+cluster_address:
+    https://mycluster.somewhere.com:9200
+
+
+# Note for multiple nodes use this syntax instead
+#cluster_address:
+#    - https://somehost_1:443
+#    - https://somehost_2:443

@@ -6,8 +6,13 @@ from collections import Counter
 from terminaltables import AsciiTable, DoubleTable
 from fabric.colors import red, green, yellow
 
-#_CLUSTER_ADDRESS = 'https://search-pl-logs-s6nxq6nxibiwvtaiqzsxqkuqvq.us-east-1.es.amazonaws.com'
-_CLUSTER_ADDRESS = 'https://esh.placester.net'
+def config():
+    """ loads our config """
+    import yaml
+    with open('es_hosts.yml', 'r') as f:
+        doc = yaml.load(f)
+    return doc
+
 
 def bytesto(bytes, to, bsize=1024):
     """convert bytes to megabytes, etc.
@@ -33,6 +38,9 @@ def get_color(str):
         return yellow(str)
 
 def main():
+    conf = config()
+    _CLUSTER_ADDRESS = conf['cluster_address']
+
     r = requests.get('{}/_stats'.format(_CLUSTER_ADDRESS))
     cl = requests.get('{}/_cluster/stats'.format(_CLUSTER_ADDRESS))
 

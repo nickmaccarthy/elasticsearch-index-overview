@@ -2,11 +2,12 @@
 A little script to list the index usage stats for an ES Cluster.  Mainly focused around understanding the usage per index pattern.  For example, alot of ELK users keep data in indexes per day, and this script will count the number of times it saw the index ( to see how many 'days' worth of logs you have ) and will sum up the total usage of that index.  
 
 # How do it use it?
-In the directory you extracted or cloned this to:
+1. In the directory you extracted or cloned this to:
 ```virtualenv env && source env/bin/activate```
-Now install the requirements
+2. Now install the requirements
 ```pip install -r requirements.txt```
-Now open the file ```es_index_stats.py``` and fill in the ```_CLUSTER_ADDRESS``` portion with the address of your ES cluster
+3. Copy es_hosts.yml.example to es_hosts.yml and fill in the address for your cluster
+4. Now open the file ```es_index_stats.py``` and fill in the ```_CLUSTER_ADDRESS``` portion with the address of your ES cluster
 
 # Output
 ```bash
@@ -47,4 +48,5 @@ In the above you will notice ```nginx-access-```, that is a daily index I keep a
 
 # Todo's
 Indicate wether an index is timestamped or not and denote that in the table. 
+Switch from requests to elasticsearch module
 

@@ -1,3 +1,4 @@
 *.txt
 *.pyc
 env*
+es_hosts.yml
