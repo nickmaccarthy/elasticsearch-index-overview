@@ -7,7 +7,7 @@ A little script to list the index usage stats for an ES Cluster.  Mainly focused
 2. Now install the requirements
 ```pip install -r requirements.txt```
 3. Copy es_hosts.yml.example to es_hosts.yml and fill in the address for your cluster
-4. Now open the file ```es_index_stats.py``` and fill in the ```_CLUSTER_ADDRESS``` portion with the address of your ES cluster
+4. Run it, ```python es_index_stats.py```
 
 # Output
 ```bash
