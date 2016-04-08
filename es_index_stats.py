@@ -41,13 +41,15 @@ def main():
     conf = config()
     _CLUSTER_ADDRESS = conf['cluster_address']
 
+    print("Getting stats from cluster...")
     r = requests.get('{}/_stats'.format(_CLUSTER_ADDRESS))
     cl = requests.get('{}/_cluster/stats'.format(_CLUSTER_ADDRESS))
-
+    print("Done getting stats from cluster...")
     clstatsd = cl.json()
 
     statsd = r.json()
 
+    print("making formatted stats...")
     total_used = statsd['_all']['total']['store']['size_in_bytes']
 
     total_size = clstatsd['nodes']['fs']['total_in_bytes']
@@ -65,6 +67,10 @@ def main():
     indexd = Counter(indexd)
 
     for index in indexes:
+        time_based = None
+        if re.match('.*(\d{1,4}).*$', index):
+            time_based = True
+
         formatted_index = re.sub('(\d{1,4}.\d{1,2}.\d{1,2})', '', index)
         total = statsd['indices'][index]['total']['store']['size_in_bytes']
         indexd += Counter({formatted_index: total})
@@ -73,6 +79,7 @@ def main():
     for i in indexes:
         day_count[re.sub('(\d{1,4}.\d{1,2}.\d{1,2})', '', i)] += 1
 
+    print indexd
     print("\n")
 
     print "Cluster Status: {}".format(get_color(clstatsd.get('status')))
@@ -93,10 +100,11 @@ def main():
     print '\n'
 
     istats = []
-    istats.append(["Index Name", "Size (GB)", "Instance Count", "Percentage Of Use"])
+    istats.append(["Index Name", "Size (GB)", "Instance Count", "Percentage Of Use", "Avg Daily (GB)"])
     for i, size in indexd.iteritems():
         percentage = float(size) / float(total_size) * 100
-        istats.append([i, "%.2f" % bytesto(size,'g'), str(day_count.get(i, 1)), "%2.f" % percentage])
+        avg_daily = bytesto(size,'g') / day_count.get(i,1)
+        istats.append([i, "%.2f" % bytesto(size,'g'), str(day_count.get(i, 1)), "%2.f" % percentage, "%2.f" % avg_daily])
 
     table = AsciiTable(istats, 'Index Usage Stats')
     print table.table
