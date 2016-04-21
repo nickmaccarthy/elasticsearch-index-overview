@@ -3,6 +3,7 @@ from pprint import pprint
 import re
 from collections import defaultdict
 from collections import Counter
+from collections import OrderedDict
 from terminaltables import AsciiTable, DoubleTable
 from fabric.colors import red, green, yellow
 
@@ -61,6 +62,7 @@ def main():
     jvm_free_mem = jvm_max_mem - jvm_used_mem
 
     indexes_formatted = [ re.sub('(\d{1,4}.\d{1,2}.\d{1,2})', '', x) for x in statsd['indices'] ]
+    #indexes_formatted.sort()
     indexes = [ x for x in statsd['indices'] ]
 
     indexd = { k:0 for k in indexes_formatted }
@@ -99,6 +101,8 @@ def main():
     print table.table
     print '\n'
 
+    # Sort the indexd
+    indexd = OrderedDict(sorted(indexd.items()))
     istats = []
     istats.append(["Index Name", "Size (GB)", "Instance Count", "Percentage Of Use", "Avg Daily (GB)"])
     for i, size in indexd.iteritems():
