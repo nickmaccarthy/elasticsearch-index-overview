@@ -11,3 +11,5 @@ six==1.10.0
 terminaltables==2.1.0
 urllib3==1.14
 wheel==0.24.0
+pyyaml==3.11
+fabric==1.11.1
